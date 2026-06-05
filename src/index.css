@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #2C3E50;
+    background: #F4F6F9;
+    line-height: 1.5;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F4F6F9;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D6DCE5;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b0bec5;
+  }
+}
+
+@layer components {
+  .erp-card {
+    @apply bg-white border border-corporate-border shadow-card;
+  }
+
+  .erp-btn-primary {
+    @apply bg-navy text-white text-sm font-medium px-4 py-2 border border-navy hover:bg-navy-light transition-colors duration-150;
+  }
+
+  .erp-btn-secondary {
+    @apply bg-white text-navy text-sm font-medium px-4 py-2 border border-corporate-border hover:bg-corporate-gray transition-colors duration-150;
+  }
+
+  .erp-btn-danger {
+    @apply bg-status-red text-white text-sm font-medium px-4 py-2 border border-status-red hover:bg-red-700 transition-colors duration-150;
+  }
+
+  .erp-input {
+    @apply w-full border border-corporate-border bg-white text-sm px-3 py-2 focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy transition-colors;
+  }
+
+  .erp-label {
+    @apply block text-xs font-semibold text-corporate-muted uppercase tracking-wide mb-1;
+  }
+
+  .erp-table {
+    @apply w-full text-sm;
+  }
+
+  .erp-table thead tr {
+    @apply bg-navy-dark text-white;
+  }
+
+  .erp-table thead th {
+    @apply text-left px-3 py-2 text-xs font-semibold uppercase tracking-wide whitespace-nowrap;
+  }
+
+  .erp-table tbody tr {
+    @apply border-b border-corporate-border hover:bg-corporate-gray transition-colors;
+  }
+
+  .erp-table tbody td {
+    @apply px-3 py-2 text-sm;
+  }
+
+  .erp-table tbody tr:last-child {
+    @apply border-b-0;
+  }
+
+  .erp-section-header {
+    @apply flex items-center justify-between px-4 py-3 border-b border-corporate-border bg-white;
+  }
+
+  .erp-section-title {
+    @apply text-sm font-bold text-navy uppercase tracking-wide;
+  }
+
+  .kpi-card {
+    @apply erp-card p-4;
+  }
+
+  .kpi-value {
+    @apply text-2xl font-bold text-navy-dark leading-none;
+  }
+
+  .kpi-label {
+    @apply text-xs text-corporate-muted uppercase tracking-wide mt-1;
+  }
+
+  .kpi-delta-up {
+    @apply text-xs text-status-green font-medium;
+  }
+
+  .kpi-delta-down {
+    @apply text-xs text-status-red font-medium;
+  }
+
+  .badge {
+    @apply text-2xs font-semibold px-2 py-0.5 uppercase tracking-wide;
+  }
+
+  .badge-green {
+    @apply badge bg-green-100 text-green-800 border border-green-200;
+  }
+
+  .badge-red {
+    @apply badge bg-red-100 text-red-800 border border-red-200;
+  }
+
+  .badge-orange {
+    @apply badge bg-orange-100 text-orange-800 border border-orange-200;
+  }
+
+  .badge-blue {
+    @apply badge bg-blue-100 text-blue-800 border border-blue-200;
+  }
+
+  .badge-gray {
+    @apply badge bg-gray-100 text-gray-700 border border-gray-200;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-corporate-text hover:bg-corporate-gray transition-colors cursor-pointer border-b border-corporate-border;
+  }
+
+  .nav-item:hover {
+    @apply text-navy;
+  }
+
+  .page-header {
+    @apply bg-navy-dark text-white px-6 py-4 border-b border-navy;
+  }
+
+  .page-content {
+    @apply p-5 space-y-4;
+  }
+
+  .filter-bar {
+    @apply erp-card px-4 py-3 flex flex-wrap gap-3 items-center;
+  }
+
+  .progress-bar-track {
+    @apply w-full bg-corporate-border h-1.5;
+  }
+
+  .progress-bar-fill {
+    @apply h-1.5 bg-navy transition-all;
+  }
+
+  .tab-btn {
+    @apply px-4 py-2 text-sm font-medium border-b-2 transition-colors;
+  }
+
+  .tab-btn-active {
+    @apply tab-btn border-navy text-navy;
+  }
+
+  .tab-btn-inactive {
+    @apply tab-btn border-transparent text-corporate-muted hover:text-navy;
+  }
+
+  .alert-banner {
+    @apply flex items-start gap-3 p-3 border-l-4 text-sm;
+  }
+
+  .alert-warning {
+    @apply alert-banner border-status-orange bg-orange-50;
+  }
+
+  .alert-danger {
+    @apply alert-banner border-status-red bg-red-50;
+  }
+
+  .alert-success {
+    @apply alert-banner border-status-green bg-green-50;
+  }
+
+  .alert-info {
+    @apply alert-banner border-status-blue bg-blue-50;
+  }
+
+  .sidebar-nav {
+    @apply w-56 bg-navy-dark min-h-screen flex flex-col;
+  }
+
+  .data-row {
+    @apply flex items-center justify-between py-2 border-b border-corporate-border;
+  }
+
+  .data-row-label {
+    @apply text-xs text-corporate-muted;
+  }
+
+  .data-row-value {
+    @apply text-sm font-semibold text-corporate-text;
+  }
+}
+
+/* Custom chart styles */
+.recharts-tooltip-wrapper {
+  border: 1px solid #D6DCE5 !important;
+  border-radius: 3px !important;
+}
+
+.recharts-default-tooltip {
+  background: #fff !important;
+  border: 1px solid #D6DCE5 !important;
+  border-radius: 3px !important;
+  font-size: 12px !important;
+  padding: 8px 12px !important;
+}
+
+/* Transition animations */
+.fade-in {
+  animation: fadeIn 0.15s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
