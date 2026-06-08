@@ -132,15 +132,15 @@ export default function DronePage() {
             <div className="p-4">
               <div className="grid md:grid-cols-3 gap-4">
                 {[
-                  { project: 'Urban Grove by Sky Park', date: '2024-07-22', res: '3 cm/px', image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
-                  { project: 'Sky Garden', date: '2024-07-15', res: '2.5 cm/px', image: 'https://images.pexels.com/photos/1738434/pexels-photo-1738434.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
-                  { project: 'Résidence Panorama', date: '2024-07-01', res: '4 cm/px', image: 'https://images.pexels.com/photos/534164/pexels-photo-534164.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+                  { project: 'Urban Grove by Sky Park', date: '2024-07-22', res: '3 cm/px', image: 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+                  { project: 'Sky Garden', date: '2024-07-15', res: '2.5 cm/px', image: 'https://images.pexels.com/photos/159306/construction-site-build-construction-work-159306.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+                  { project: 'Résidence Panorama', date: '2024-07-01', res: '4 cm/px', image: 'https://images.pexels.com/photos/209251/pexels-photo-209251.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
                 ].map(ortho => (
                   <div key={ortho.project} className="erp-card overflow-hidden">
                     <div className="relative">
                       <img src={ortho.image} alt={ortho.project} className="w-full h-40 object-cover" />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                        <span className="text-white text-xs bg-black/50 px-3 py-1">Orthophoto simulée</span>
+                        <span className="text-white text-xs bg-black/50 px-3 py-1">Photo chantier réelle</span>
                       </div>
                       <button className="absolute bottom-2 right-2 bg-white text-xs px-2 py-1 flex items-center gap-1" style={{ color: NAVY }}>
                         <Eye size={11} /> Plein écran
@@ -158,6 +158,14 @@ export default function DronePage() {
                   <Upload size={20} className="text-corporate-muted mb-2" />
                   <p className="text-sm text-corporate-muted">Importer une nouvelle orthophoto</p>
                   <p className="text-2xs text-corporate-muted mt-1">Formats: GeoTIFF, JPEG2000, PNG · Max 2 GB</p>
+                </div>
+                <div className="erp-card p-4 mt-3">
+                  <p className="text-xs font-semibold text-gray-800">Exemples de rapports PDF réels</p>
+                  <p className="text-2xs text-corporate-muted mt-1">Liens de démonstration pour les rapports de mission et de suivi chantier.</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <a href="https://file-examples.com/storage/fe3d6c64be7742b12afdb789/2017/10/file-sample_150kB.pdf" target="_blank" rel="noreferrer" className="text-xs px-3 py-1.5 rounded bg-gray-100 text-gray-700 hover:bg-gray-200">Rapport de mission · 150 kB</a>
+                    <a href="https://file-examples.com/storage/fe3d6c64be7742b12afdb789/2017/10/file-sample_500kB.pdf" target="_blank" rel="noreferrer" className="text-xs px-3 py-1.5 rounded bg-gray-100 text-gray-700 hover:bg-gray-200">Suivi chantier · 500 kB</a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -247,7 +255,7 @@ export default function DronePage() {
                   </div>
                   <div className="relative">
                     <img
-                      src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop"
+                      src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop"
                       alt="Avant"
                       className="w-full h-48 object-cover"
                     />
@@ -262,7 +270,7 @@ export default function DronePage() {
                   </div>
                   <div className="relative">
                     <img
-                      src="https://images.pexels.com/photos/534164/pexels-photo-534164.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop"
+                      src="https://images.pexels.com/photos/159306/construction-site-build-construction-work-159306.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop"
                       alt="Après"
                       className="w-full h-48 object-cover"
                     />

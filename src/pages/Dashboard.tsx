@@ -103,21 +103,25 @@ export default function DashboardPage() {
       <div className="page-content">
         {/* Active Alerts Banner */}
         {activeAlerts.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="grid gap-3 md:grid-cols-3">
             {activeAlerts.slice(0, 3).map(a => (
-              <div key={a.id} className={`flex-shrink-0 flex items-start gap-2 px-3 py-2 border-l-4 text-xs min-w-64 ${
-                a.type === 'danger' ? 'bg-red-50 border-red-500' :
-                a.type === 'warning' ? 'bg-orange-50 border-orange-500' :
-                'bg-blue-50 border-blue-500'
-              }`}>
-                <AlertTriangle size={12} className={`mt-0.5 flex-shrink-0 ${
-                  a.type === 'danger' ? 'text-red-500' : a.type === 'warning' ? 'text-orange-500' : 'text-blue-500'
-                }`} />
-                <div>
-                  <p className="font-semibold text-gray-800">{a.title}</p>
-                  <p className="text-gray-500 text-2xs mt-0.5">{a.module} · {a.date}</p>
+              <article key={a.id} className="bg-white p-5 flex items-start gap-4 rounded-sm border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                <div className={`w-10 h-10 flex items-center justify-center rounded-sm ${
+                  a.type === 'danger' ? 'bg-red-50' : a.type === 'warning' ? 'bg-orange-50' : 'bg-blue-50'
+                }`}>
+                  <AlertTriangle className={`w-5 h-5 ${
+                    a.type === 'danger' ? 'text-red-500' : a.type === 'warning' ? 'text-orange-500' : 'text-blue-500'
+                  }`} />
                 </div>
-              </div>
+                <div className="min-w-0">
+                  <h3 className={`font-semibold text-sm ${
+                    a.type === 'danger' ? 'text-red-600' : a.type === 'warning' ? 'text-orange-600' : 'text-blue-700'
+                  }`}>
+                    {a.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">{a.module} · {a.date}</p>
+                </div>
+              </article>
             ))}
           </div>
         )}

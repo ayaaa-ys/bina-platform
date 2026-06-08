@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { documents } from '../data/mockData';
-import { FolderOpen, Upload, Search, Filter, Eye, Download, CheckCircle, Clock, XCircle, Plus } from 'lucide-react';
+import React, { useMemo, useRef, useState } from 'react';
+import { documents as mockDocuments } from '../data/mockData';
+import type { Document as DocumentItem } from '../types';
+import { FolderOpen, Upload, Search, Eye, Download, CheckCircle, Clock, XCircle, Plus } from 'lucide-react';
 
 const NAVY = '#4B5563';
 const categories = ['Tous', 'Plans', 'Contrat', 'Administratif', 'Technique', 'Commercial', 'Reporting', 'Qualité', 'Marché'];
+
+type UploadedDocument = DocumentItem & {
+  fileUrl?: string;
+};
 
 const statusBadge = (s: string) => {
   if (s === 'Approuvé') return 'badge-green';
@@ -23,21 +28,78 @@ export default function DocumentsPage() {
   const [category, setCategory] = useState('Tous');
   const [search, setSearch] = useState('');
   const [projectFilter, setProjectFilter] = useState('all');
-  const [view, setView] = useState<'table' | 'grid'>('table');
+  const [documentsList, setDocumentsList] = useState<UploadedDocument[]>(() => mockDocuments.map(doc => ({ ...doc })));
+  const [dragActive, setDragActive] = useState(false);
+  const [feedback, setFeedback] = useState('');
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const projects = Array.from(new Set(documents.map(d => d.project)));
-  const filtered = documents.filter(d => {
+  const projects = Array.from(new Set(documentsList.map(d => d.project)));
+  const filtered = useMemo(() => documentsList.filter(d => {
     if (category !== 'Tous' && d.category !== category) return false;
     if (projectFilter !== 'all' && d.project !== projectFilter) return false;
     if (search && !d.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
-  });
+  }), [category, documentsList, projectFilter, search]);
 
-  const stats = {
-    total: documents.length,
-    approved: documents.filter(d => d.status === 'Approuvé').length,
-    pending: documents.filter(d => d.status === 'En attente').length,
-    rejected: documents.filter(d => d.status === 'Rejeté').length,
+  const stats = useMemo(() => ({
+    total: documentsList.length,
+    approved: documentsList.filter(d => d.status === 'Approuvé').length,
+    pending: documentsList.filter(d => d.status === 'En attente').length,
+    rejected: documentsList.filter(d => d.status === 'Rejeté').length,
+  }), [documentsList]);
+
+  const formatSize = (sizeInBytes: number) => {
+    if (sizeInBytes < 1024) return `${sizeInBytes} octets`;
+    if (sizeInBytes < 1024 * 1024) return `${(sizeInBytes / 1024).toFixed(1)} KB`;
+    return `${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const addFiles = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    const pdfFiles = Array.from(files).filter(file => file.type === 'application/pdf' || /\.pdf$/i.test(file.name));
+
+    if (pdfFiles.length === 0) {
+      setFeedback('Veuillez sélectionner au moins un fichier PDF.');
+      return;
+    }
+
+    const newDocuments: UploadedDocument[] = pdfFiles.map(file => ({
+      id: `upload-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      name: file.name,
+      category: 'Technique',
+      project: 'Projet courant',
+      version: 'v1.0',
+      status: 'En attente',
+      uploadedBy: 'Vous',
+      uploadDate: new Date().toLocaleDateString('fr-FR'),
+      size: formatSize(file.size),
+      fileUrl: URL.createObjectURL(file),
+    }));
+
+    setDocumentsList(prev => [...newDocuments, ...prev]);
+    setFeedback('Fichier ajouté avec succès');
+  };
+
+  const handlePreview = (doc: UploadedDocument) => {
+    if (doc.fileUrl) {
+      window.open(doc.fileUrl, '_blank', 'noopener');
+      return;
+    }
+
+    setFeedback('Aperçu disponible pour les fichiers téléchargés depuis cette page.');
+  };
+
+  const handleDownload = (doc: UploadedDocument) => {
+    if (!doc.fileUrl) {
+      setFeedback('Le téléchargement n’est disponible que pour les fichiers ajoutés ici.');
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.href = doc.fileUrl;
+    link.download = doc.name.endsWith('.pdf') ? doc.name : `${doc.name}.pdf`;
+    link.click();
   };
 
   return (
@@ -115,16 +177,52 @@ export default function DocumentsPage() {
 
           {/* Upload Zone */}
           <div className="p-4 border-b border-corporate-border">
-            <div className="border-2 border-dashed border-corporate-border bg-corporate-gray p-4 flex items-center justify-center gap-3 cursor-pointer hover:border-navy transition-colors">
-              <Upload size={16} className="text-corporate-muted" />
-              <div>
-                <p className="text-sm font-medium text-gray-700">Glissez-déposez vos documents ici</p>
-                <p className="text-2xs text-corporate-muted mt-0.5">PDF, Excel, Word, DWG, DXF — Max 50 MB par fichier</p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,application/pdf"
+              multiple
+              className="hidden"
+              onChange={e => {
+                addFiles(e.target.files);
+                e.target.value = '';
+              }}
+            />
+            <div
+              className={`border-2 border-dashed p-4 flex flex-col md:flex-row items-center justify-between gap-3 cursor-pointer transition-colors ${dragActive ? 'border-navy bg-blue-50' : 'border-corporate-border bg-corporate-gray hover:border-navy'}`}
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={e => {
+                e.preventDefault();
+                setDragActive(true);
+              }}
+              onDragLeave={() => setDragActive(false)}
+              onDrop={e => {
+                e.preventDefault();
+                setDragActive(false);
+                addFiles(e.dataTransfer.files);
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <Upload size={16} className="text-corporate-muted" />
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Glissez-déposez vos documents ici</p>
+                  <p className="text-2xs text-corporate-muted mt-0.5">Formats PDF uniquement — ajout multiple disponible</p>
+                </div>
               </div>
-              <button className="erp-btn-secondary text-xs py-1.5 px-3 ml-4">
+              <button
+                type="button"
+                className="erp-btn-secondary text-xs py-1.5 px-3"
+                onClick={e => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
+              >
                 Parcourir
               </button>
             </div>
+            {feedback && (
+              <p className="mt-2 text-xs text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">{feedback}</p>
+            )}
           </div>
 
           {/* Table */}
@@ -132,11 +230,9 @@ export default function DocumentsPage() {
             <table className="erp-table">
               <thead>
                 <tr>
-                  <th>Nom du document</th>
+                  <th>Nom document</th>
                   <th>Catégorie</th>
                   <th>Projet</th>
-                  <th>Version</th>
-                  <th>Soumis par</th>
                   <th>Date</th>
                   <th>Taille</th>
                   <th>Statut</th>
@@ -154,8 +250,6 @@ export default function DocumentsPage() {
                     </td>
                     <td><span className="badge badge-blue">{doc.category}</span></td>
                     <td className="text-xs text-corporate-muted max-w-28 truncate">{doc.project}</td>
-                    <td className="text-xs font-mono text-center">{doc.version}</td>
-                    <td className="text-xs text-corporate-muted">{doc.uploadedBy}</td>
                     <td className="text-xs">{doc.uploadDate}</td>
                     <td className="text-xs text-corporate-muted">{doc.size}</td>
                     <td>
@@ -166,11 +260,19 @@ export default function DocumentsPage() {
                     </td>
                     <td>
                       <div className="flex items-center gap-2">
-                        <button className="text-xs text-navy flex items-center gap-0.5 hover:underline" style={{ color: NAVY }}>
+                        <button
+                          type="button"
+                          onClick={() => handlePreview(doc)}
+                          className="text-xs text-navy flex items-center gap-0.5 hover:underline" style={{ color: NAVY }}
+                        >
                           <Eye size={10} /> Voir
                         </button>
-                        <button className="text-xs text-corporate-muted flex items-center gap-0.5 hover:text-navy">
-                          <Download size={10} /> DL
+                        <button
+                          type="button"
+                          onClick={() => handleDownload(doc)}
+                          className="text-xs text-corporate-muted flex items-center gap-0.5 hover:text-navy"
+                        >
+                          <Download size={10} /> Télécharger
                         </button>
                         {doc.status === 'En attente' && (
                           <button className="text-xs text-green-600 flex items-center gap-0.5 hover:underline">
