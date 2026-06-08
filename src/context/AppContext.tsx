@@ -14,7 +14,7 @@ interface AppContextType {
 }
 
 const defaultUsers: User[] = [
-  { id: '1', username: 'admin', email: 'admin@valoris.ma', fullName: 'Administrateur Système', role: 'Directeur', password: 'admin', createdAt: '2024-01-01' },
+  { id: '1', username: 'admin', email: 'admin@valoris.ma', fullName: 'Administrateur Système', role: 'Directeur', password: 'valorisbina', createdAt: '2024-01-01' },
   { id: '2', username: 'direction', email: 'direction@valoris.ma', fullName: 'Abdelatif Aouragh', role: 'PDG', password: 'valoris2024', createdAt: '2024-01-01' },
   { id: '3', username: 'commercial', email: 'commercial@valoris.ma', fullName: 'Équipe Commerciale', role: 'Responsable Commercial', password: 'com2024', createdAt: '2024-01-01' },
 ];

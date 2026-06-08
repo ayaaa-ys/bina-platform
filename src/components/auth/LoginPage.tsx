@@ -240,7 +240,7 @@ export default function LoginPage() {
                 <ArrowRight size={14} />
               </button>
               <p className="text-2xs text-center text-gray-400 mt-4">
-                Compte démo — identifiant: <strong>admin</strong> / mot de passe: <strong>admin</strong>
+                Compte démo — identifiant: <strong>admin</strong> / mot de passe: <strong>valorisbina</strong>
               </p>
             </form>
           ) : (
